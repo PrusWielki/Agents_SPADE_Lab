@@ -21,29 +21,22 @@ class StateCount(State):
                 idOfAgentToSend = 2
             else:
                 idOfAgentToSend = 1
-            # print(messageReceived.sender)
             if 'distractagent' == str(messageReceived.sender):
                 if random.random() < chanceToInterrupt:
                     self.agent.counter = int(messageReceived.body)
-                    # messageToSend = Message(to="Patryk123@jabb.im/" + str(idOfAgentToSend))
-                    # messageToSend.body = str(self.agent.counter)
-                    # await self.send(messageToSend)
                     # time.sleep(4)
                     # toDiscard= await self.receive()
                     # print(toDiscard.body)
                     # await self.send(Message(to="Patryk123@jabb.im/" + str(idOfAgentToSend),
                     #                        body=str(self.agent.counter)))
                     # print("Oh no I(" + str(self.agent.id) + ") got distracted!!!")
-                    # print("CounterAgent(" + str(self.agent.id) + ") claims the counter is: " + str(self.agent.counter))
-
+                    # print("CounterAgent(" + str(self.agent.id) +
+                    # ") claims the counter is: " + str(self.agent.counter))
                     self.set_next_state(STATE_DISTRACTED)
                 else:
                     print("NOT TODAY")
             else:
                 self.agent.counter = int(messageReceived.body) + 1
-                # messageToSend = Message(to="Patryk123@jabb.im/" + str(idOfAgentToSend))
-                # messageToSend.body = str(self.agent.counter)
-                # await self.send(messageToSend)
                 await self.send(Message(to="Patryk123@jabb.im/" + str(idOfAgentToSend),
                                         body=str(self.agent.counter)))
                 print("CounterAgent(" + str(self.agent.id) + ") claims the counter is: " + str(self.agent.counter))
@@ -62,17 +55,13 @@ class StateDistracted(State):
                 idOfAgentToSend = 2
             else:
                 idOfAgentToSend = 1
-            if 'true' == 'true':  # int(messageReceived.body) - self.agent.counter <= 1:
-                # self.agent.counter = int(messageReceived.body) + 1
-                print(
-                    "CounterAgent(" + str(self.agent.id) + ") got distracted and claims the counter is: "
-                    + str(self.agent.counter))
-                await self.send(
-                    Message(to="Patryk123@jabb.im/" + str(idOfAgentToSend),
-                            body=str(self.agent.counter)))
-                self.set_next_state(STATE_COUNT)
-            else:
-                self.set_next_state(STATE_DISTRACTED)
+            print(
+                "CounterAgent(" + str(self.agent.id) + ") got distracted and claims the counter is: "
+                + str(self.agent.counter))
+            await self.send(
+                Message(to="Patryk123@jabb.im/" + str(idOfAgentToSend),
+                        body=str(self.agent.counter)))
+            self.set_next_state(STATE_COUNT)
         else:
             self.set_next_state(STATE_DISTRACTED)
         #time.sleep(1)
@@ -95,7 +84,6 @@ class CounterAgent(Agent):
         fsm = ExampleFSMBehaviour()
         fsm.add_state(name=STATE_COUNT, state=StateCount(), initial=True)
         fsm.add_state(name=STATE_DISTRACTED, state=StateDistracted())
-        # This is necessary (otherwise an error is raised)
         fsm.add_transition(source=STATE_COUNT, dest=STATE_DISTRACTED)
         fsm.add_transition(source=STATE_DISTRACTED, dest=STATE_DISTRACTED)
         fsm.add_transition(source=STATE_DISTRACTED, dest=STATE_COUNT)
@@ -110,10 +98,6 @@ class DistractAgent(Agent):
 
     class DistractBehaviour(PeriodicBehaviour):
         async def run(self):
-            # messageToSend = Message(to="Patryk123@jabb.im/" + str(random.randint(1, 2)))
-            # messageToSend.body = str(random.randint(1, 100))
-            # messageToSend.sender = "DistractAgent"
-            # await self.send(messageToSend)
             await self.send(
                 Message(to="Patryk123@jabb.im/" + str(random.randint(1, 2)),
                         body=str(random.randint(1, 100)),
@@ -124,10 +108,6 @@ class DistractAgent(Agent):
 class AgentOneStart(OneShotBehaviour):
     async def run(self):
         print("CounterAgent(" + str(self.agent.id) + ") claims the counter is: " + str(self.agent.counter))
-        # messageToSend = Message(to="Patryk123@jabb.im/2")
-        # messageToSend.body = str(self.agent.counter + 1)
-        # await self.send(messageToSend)
-
         await self.send(Message(to="Patryk123@jabb.im/2",
                                 body=str(self.agent.counter)))
 
@@ -146,7 +126,6 @@ if __name__ == "__main__":
 
     future1 = counterAgentOne.start()
 
-    # Here is a mistake in the docs (no waiting for agent to start)
     future = distractAgent.start()
     future.result()
     future1.result()
