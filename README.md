@@ -1,1 +1,7 @@
 # Agents_SPADE_Lab
+There are 3 agents.
+The initial state in agent one and two is "counting".
+2 agents count in turns (first agent prints 1, sends this counter to another agent, then the second agent prints counter+1 and sends back counter+1)
+At some point (i.e. PeriodicBehaviour) the third agent starts trying to interrupt by randomly sending first and second agent random numbers.
+First and second agent have a chance (library random) to make a mistake. If they get distracted they send another agent the number which then got from third agent (instead of counter+1). It also changes the state (FSMBehaviour) to "distracted".
+
